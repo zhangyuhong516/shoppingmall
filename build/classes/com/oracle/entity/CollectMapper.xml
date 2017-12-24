@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.oracle.model.dao.CollectMapper" >
+  <resultMap id="BaseResultMap" type="com.oracle.entity.Collect" >
+    <id column="COLLECT_ID" property="collectId" jdbcType="DECIMAL" />
+    <result column="USER_ID" property="userId" jdbcType="DECIMAL" />
+    <result column="GOODS_ID" property="goodsId" jdbcType="DECIMAL" />
+    <result column="COLLECT_KIND" property="collectKind" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    COLLECT_ID, USER_ID, GOODS_ID, COLLECT_KIND
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from JYK.T_COLLECT
+    where COLLECT_ID = #{collectId,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from JYK.T_COLLECT
+    where COLLECT_ID = #{collectId,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.oracle.entity.Collect" >
+    insert into JYK.T_COLLECT (COLLECT_ID, USER_ID, GOODS_ID, 
+      COLLECT_KIND)
+    values (#{collectId,jdbcType=DECIMAL}, #{userId,jdbcType=DECIMAL}, #{goodsId,jdbcType=DECIMAL}, 
+      #{collectKind,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.oracle.entity.Collect" >
+    insert into JYK.T_COLLECT
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="collectId != null" >
+        COLLECT_ID,
+      </if>
+      <if test="userId != null" >
+        USER_ID,
+      </if>
+      <if test="goodsId != null" >
+        GOODS_ID,
+      </if>
+      <if test="collectKind != null" >
+        COLLECT_KIND,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="collectId != null" >
+        #{collectId,jdbcType=DECIMAL},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=DECIMAL},
+      </if>
+      <if test="goodsId != null" >
+        #{goodsId,jdbcType=DECIMAL},
+      </if>
+      <if test="collectKind != null" >
+        #{collectKind,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.oracle.entity.Collect" >
+    update JYK.T_COLLECT
+    <set >
+      <if test="userId != null" >
+        USER_ID = #{userId,jdbcType=DECIMAL},
+      </if>
+      <if test="goodsId != null" >
+        GOODS_ID = #{goodsId,jdbcType=DECIMAL},
+      </if>
+      <if test="collectKind != null" >
+        COLLECT_KIND = #{collectKind,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where COLLECT_ID = #{collectId,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.oracle.entity.Collect" >
+    update JYK.T_COLLECT
+    set USER_ID = #{userId,jdbcType=DECIMAL},
+      GOODS_ID = #{goodsId,jdbcType=DECIMAL},
+      COLLECT_KIND = #{collectKind,jdbcType=VARCHAR}
+    where COLLECT_ID = #{collectId,jdbcType=DECIMAL}
+  </update>
+</mapper>

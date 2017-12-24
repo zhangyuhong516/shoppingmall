@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.oracle.model.dao.AuthUserMapper" >
+  <resultMap id="BaseResultMap" type="com.oracle.entity.AuthUser" >
+    <id column="AUTH_USER_ID" property="authUserId" jdbcType="DECIMAL" />
+    <result column="AUTH_ID" property="authId" jdbcType="DECIMAL" />
+    <result column="ADMIN_ID" property="adminId" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    AUTH_USER_ID, AUTH_ID, ADMIN_ID
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from JYK.T_AUTH_USER
+    where AUTH_USER_ID = #{authUserId,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from JYK.T_AUTH_USER
+    where AUTH_USER_ID = #{authUserId,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.oracle.entity.AuthUser" >
+    insert into JYK.T_AUTH_USER (AUTH_USER_ID, AUTH_ID, ADMIN_ID
+      )
+    values (#{authUserId,jdbcType=DECIMAL}, #{authId,jdbcType=DECIMAL}, #{adminId,jdbcType=DECIMAL}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.oracle.entity.AuthUser" >
+    insert into JYK.T_AUTH_USER
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="authUserId != null" >
+        AUTH_USER_ID,
+      </if>
+      <if test="authId != null" >
+        AUTH_ID,
+      </if>
+      <if test="adminId != null" >
+        ADMIN_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="authUserId != null" >
+        #{authUserId,jdbcType=DECIMAL},
+      </if>
+      <if test="authId != null" >
+        #{authId,jdbcType=DECIMAL},
+      </if>
+      <if test="adminId != null" >
+        #{adminId,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.oracle.entity.AuthUser" >
+    update JYK.T_AUTH_USER
+    <set >
+      <if test="authId != null" >
+        AUTH_ID = #{authId,jdbcType=DECIMAL},
+      </if>
+      <if test="adminId != null" >
+        ADMIN_ID = #{adminId,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where AUTH_USER_ID = #{authUserId,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.oracle.entity.AuthUser" >
+    update JYK.T_AUTH_USER
+    set AUTH_ID = #{authId,jdbcType=DECIMAL},
+      ADMIN_ID = #{adminId,jdbcType=DECIMAL}
+    where AUTH_USER_ID = #{authUserId,jdbcType=DECIMAL}
+  </update>
+</mapper>

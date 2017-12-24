@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.oracle.model.dao.UserMapper" >
+  <resultMap id="BaseResultMap" type="com.oracle.entity.User" >
+    <id column="USER_ID" property="userId" jdbcType="DECIMAL" />
+    <result column="USER_NAME" property="userName" jdbcType="VARCHAR" />
+    <result column="USER_REALNAME" property="userRealname" jdbcType="VARCHAR" />
+    <result column="USER_PASSWORD" property="userPassword" jdbcType="VARCHAR" />
+    <result column="USER_LEVEL" property="userLevel" jdbcType="DECIMAL" />
+    <result column="USER_ADDRESS" property="userAddress" jdbcType="VARCHAR" />
+    <result column="USER_POSTCODE" property="userPostcode" jdbcType="VARCHAR" />
+    <result column="USER_TEL" property="userTel" jdbcType="VARCHAR" />
+    <result column="USER_EMAIL" property="userEmail" jdbcType="VARCHAR" />
+    <result column="USER_CREATETIME" property="userCreatetime" jdbcType="TIMESTAMP" />
+    <result column="USER_DESC" property="userDesc" jdbcType="VARCHAR" />
+    <result column="USER_IMG" property="userImg" jdbcType="VARCHAR" />
+    <result column="USER_QUESTION" property="userQuestion" jdbcType="VARCHAR" />
+    <result column="USER_ANSWER" property="userAnswer" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    USER_ID, USER_NAME, USER_REALNAME, USER_PASSWORD, USER_LEVEL, USER_ADDRESS, USER_POSTCODE, 
+    USER_TEL, USER_EMAIL, USER_CREATETIME, USER_DESC, USER_IMG, USER_QUESTION, USER_ANSWER
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from JYK.T_USER
+    where USER_ID = #{userId,jdbcType=DECIMAL}
+  </select>
+  
+  <select id="selectByUserName" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from JYK.T_USER
+    where USER_NAME = #{userName,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectAll" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from JYK.T_USER
+    order by USER_ID
+  </select>
+  <sql id="select_sql">
+     select 
+    <include refid="Base_Column_List" />
+     from JYK.T_USER
+     where 1=1
+      <if test="user.userName != null and user.userName != ''" >
+        and user_name like '%' || #{user.userName} || '%'
+    </if>
+    
+    <if test="user.userLevel != null" >
+        and user_level = #{user.userLevel}
+    </if>
+    
+    order by user_id
+  </sql>
+  
+  <select id="selectCount" resultType="java.lang.Integer">
+    select  count(1) from (<include refid="select_sql"/>)
+  </select>
+  
+  <select id="selectByPager" resultMap="BaseResultMap">
+    select pager2.*,pager2.rn from (
+     select rownum rn,pager1.* from(
+     <!-- select 
+	    <include refid="Base_Column_List" />
+	    from JYK.T_USER
+	    order by USER_ID -->
+	    <include refid="select_sql"/>
+		    ) pager1
+		
+		)pager2
+		
+		where pager2.rn <![CDATA[>=]]> #{pager.begin}  and pager2.rn <![CDATA[<=]]> #{pager.end}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from JYK.T_USER
+    where USER_ID = #{userId,jdbcType=DECIMAL}
+  </delete>
+  
+  <insert id="insert" parameterType="com.oracle.entity.User" >
+    insert into JYK.T_USER (USER_ID, USER_NAME, USER_REALNAME, 
+      USER_PASSWORD, USER_LEVEL, USER_ADDRESS, 
+      USER_POSTCODE, USER_TEL, USER_EMAIL, 
+      USER_DESC, USER_IMG, USER_QUESTION, USER_ANSWER)
+    values (seq_user.nextval, #{userName,jdbcType=VARCHAR}, #{userRealname,jdbcType=VARCHAR}, 
+      #{userPassword,jdbcType=VARCHAR}, #{userLevel,jdbcType=DECIMAL}, #{userAddress,jdbcType=VARCHAR}, 
+      #{userPostcode,jdbcType=VARCHAR}, #{userTel,jdbcType=VARCHAR}, #{userEmail,jdbcType=VARCHAR}, 
+      #{userDesc,jdbcType=VARCHAR}, #{userImg,jdbcType=VARCHAR}, 
+      #{userQuestion,jdbcType=VARCHAR}, #{userAnswer,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.oracle.entity.User" >
+    insert into JYK.T_USER
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        USER_ID,
+      </if>
+      <if test="userName != null" >
+        USER_NAME,
+      </if>
+      <if test="userRealname != null" >
+        USER_REALNAME,
+      </if>
+      <if test="userPassword != null" >
+        USER_PASSWORD,
+      </if>
+      <if test="userLevel != null" >
+        USER_LEVEL,
+      </if>
+      <if test="userAddress != null" >
+        USER_ADDRESS,
+      </if>
+      <if test="userPostcode != null" >
+        USER_POSTCODE,
+      </if>
+      <if test="userTel != null" >
+        USER_TEL,
+      </if>
+      <if test="userEmail != null" >
+        USER_EMAIL,
+      </if>
+      <if test="userCreatetime != null" >
+        USER_CREATETIME,
+      </if>
+      <if test="userDesc != null" >
+        USER_DESC,
+      </if>
+      <if test="userImg != null" >
+        USER_IMG,
+      </if>
+      <if test="userQuestion != null" >
+        USER_QUESTION,
+      </if>
+      <if test="userAnswer != null" >
+        USER_ANSWER,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        #{userId,jdbcType=DECIMAL},
+      </if>
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userRealname != null" >
+        #{userRealname,jdbcType=VARCHAR},
+      </if>
+      <if test="userPassword != null" >
+        #{userPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="userLevel != null" >
+        #{userLevel,jdbcType=DECIMAL},
+      </if>
+      <if test="userAddress != null" >
+        #{userAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="userPostcode != null" >
+        #{userPostcode,jdbcType=VARCHAR},
+      </if>
+      <if test="userTel != null" >
+        #{userTel,jdbcType=VARCHAR},
+      </if>
+      <if test="userEmail != null" >
+        #{userEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="userCreatetime != null" >
+        #{userCreatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userDesc != null" >
+        #{userDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="userImg != null" >
+        #{userImg,jdbcType=VARCHAR},
+      </if>
+      <if test="userQuestion != null" >
+        #{userQuestion,jdbcType=VARCHAR},
+      </if>
+      <if test="userAnswer != null" >
+        #{userAnswer,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.oracle.entity.User" >
+    update JYK.T_USER
+    <set >
+      <if test="userName != null" >
+        USER_NAME = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userRealname != null" >
+        USER_REALNAME = #{userRealname,jdbcType=VARCHAR},
+      </if>
+      <if test="userPassword != null" >
+        USER_PASSWORD = #{userPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="userLevel != null" >
+        USER_LEVEL = #{userLevel,jdbcType=DECIMAL},
+      </if>
+      <if test="userAddress != null" >
+        USER_ADDRESS = #{userAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="userPostcode != null" >
+        USER_POSTCODE = #{userPostcode,jdbcType=VARCHAR},
+      </if>
+      <if test="userTel != null" >
+        USER_TEL = #{userTel,jdbcType=VARCHAR},
+      </if>
+      <if test="userEmail != null" >
+        USER_EMAIL = #{userEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="userCreatetime != null" >
+        USER_CREATETIME = #{userCreatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userDesc != null" >
+        USER_DESC = #{userDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="userImg != null" >
+        USER_IMG = #{userImg,jdbcType=VARCHAR},
+      </if>
+      <if test="userQuestion != null" >
+        USER_QUESTION = #{userQuestion,jdbcType=VARCHAR},
+      </if>
+      <if test="userAnswer != null" >
+        USER_ANSWER = #{userAnswer,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where USER_ID = #{userId,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.oracle.entity.User" >
+    update JYK.T_USER
+    set USER_NAME = #{userName,jdbcType=VARCHAR},
+      USER_REALNAME = #{userRealname,jdbcType=VARCHAR},
+      USER_PASSWORD = #{userPassword,jdbcType=VARCHAR},
+      USER_LEVEL = #{userLevel,jdbcType=DECIMAL},
+      USER_ADDRESS = #{userAddress,jdbcType=VARCHAR},
+      USER_POSTCODE = #{userPostcode,jdbcType=VARCHAR},
+      USER_TEL = #{userTel,jdbcType=VARCHAR},
+      USER_EMAIL = #{userEmail,jdbcType=VARCHAR},
+      USER_CREATETIME = #{userCreatetime,jdbcType=TIMESTAMP},
+      USER_DESC = #{userDesc,jdbcType=VARCHAR},
+      USER_IMG = #{userImg,jdbcType=VARCHAR},
+      USER_QUESTION = #{userQuestion,jdbcType=VARCHAR},
+      USER_ANSWER = #{userAnswer,jdbcType=VARCHAR}
+    where USER_ID = #{userId,jdbcType=DECIMAL}
+  </update>
+</mapper>

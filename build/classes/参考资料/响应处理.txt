@@ -1,0 +1,12 @@
+1.无返回值，传入request,response两个参数手动响应 
+
+2.返回ModelAndView
+  2.1 InternalResourceView 
+  2.2 RedirectView
+
+3.返回视图逻辑名  prefix与suffix之间的名称
+
+
+4.直接返回值或无返回值，使用约定 自动跳转到prefix+命名空间/ActionName+suffix
+
+  多个对象传值（Model、Map或ModelMap），或传入一个对象，此对象自动会放入request

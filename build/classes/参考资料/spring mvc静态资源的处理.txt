@@ -1,0 +1,29 @@
+1.         <!-- 以下路径不会被当控制器拦截，当静态资源处理 -->
+	 <mvc:resources mapping="/images/*" location="/images/" /> 
+	 <mvc:resources mapping="/css/*" location="/css/" /> 
+	 <mvc:resources mapping="/js/*" location="/js/" /> -->
+
+2.        <!-- 由springmvc对请求进行分类，如果是静态资源，则交给DefaultServlet处理 -->
+	 <mvc:default-servlet-handler/>
+
+
+
+3.
+  <!-- 使用DefaultServlet处理以下请求 -->
+  <servlet-mapping>
+    <servlet-name>default</servlet-name>
+    <url-pattern>/images/*</url-pattern>
+    <url-pattern>/js/*</url-pattern>
+    <url-pattern>/css/*</url-pattern>
+  </servlet-mapping>
+
+
+
+DefaultServlet Servlet API内置的Servlet用处理静态文件
+
+JspServlet  Servlet API内置的Servlet用处理动态jsp文件
+
+
+
+
+

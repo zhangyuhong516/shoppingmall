@@ -1,0 +1,38 @@
+spring搭建
+
+1.添加类库spring liberary : core,persistence(持久化包),web
+
+2.在web.xml当中添加application(ServletContextListener)监听器，监听application的创建，在应用创建的时候，启动spring
+
+3.向spring申请注册service，配置service的扫描目录
+
+
+
+mybatis搭建
+
+1.添加mybatis类库
+
+2.生成逆向工程:
+  2.1 将MyBatisXmlGenerator.java,MyBatisGeneratorConfig.xml两个文件拷贝进工程
+  2.2 将数据源和sessionFactory交给spring管理:
+      2.2.1 在applicationContext.xml配置数据源(dataSource)
+      2.2.2 在applicationContext.xml配置sqlSessionFactory,配置sqlSessionFactory时需要配置，逆向工程的映射文件（Mapper.xml，entity(实体)类）
+
+3.向spring申请注册dao(mybatis生成的动态代理)
+
+springmvc搭建
+
+1.添加springmvc类库
+
+2.在web.xml当中配置servlet(org.springframework.web.servlet.DispatcherServlet)
+
+3.扫描controller,配置controller的描扫目录
+
+4.打开springmvc映射器和适配器(启用用来配置springmvc控制器的注解)
+
+5.配置视图(jsp)的位置,前辍(/WEB-INF/content)和后辍(.jsp)
+
+
+
+
+     

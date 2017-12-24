@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.oracle.model.dao.GoodsMapper" >
+  <resultMap id="BaseResultMap" type="com.oracle.entity.Goods" >
+    <id column="GOODS_ID" property="goodsId" jdbcType="DECIMAL" />
+    <result column="GOODS_NUMBER" property="goodsNumber" jdbcType="DECIMAL" />
+    <result column="GOODS_TYPE_ID" property="goodsTypeId" jdbcType="DECIMAL" />
+    <result column="GOODS_NAME" property="goodsName" jdbcType="VARCHAR" />
+    <result column="GOODS_PIC" property="goodsPic" jdbcType="VARCHAR" />
+    <result column="GOODS_INFO" property="goodsInfo" jdbcType="VARCHAR" />
+    <result column="GOODS_CUL" property="goodsCul" jdbcType="DECIMAL" />
+    <result column="GOODS_ORIGINAL_PRICE" property="goodsOriginalPrice" jdbcType="DECIMAL" />
+    <result column="NORMAL_PRICE" property="normalPrice" jdbcType="DECIMAL" />
+    <result column="VIP_PRICE" property="vipPrice" jdbcType="DECIMAL" />
+    <result column="SALE_PRICE" property="salePrice" jdbcType="DECIMAL" />
+    <result column="GOODS_RESERVE_COUNT" property="goodsReserveCount" jdbcType="DECIMAL" />
+    <result column="GOODS_TOTAL_SELL_COUNT" property="goodsTotalSellCount" jdbcType="DECIMAL" />
+    <result column="GOODS_BRAND" property="goodsBrand" jdbcType="VARCHAR" />
+    <result column="GOODS_RESOURCE" property="goodsResource" jdbcType="VARCHAR" />
+    <result column="GOODS_T1" property="goodsT1" jdbcType="VARCHAR" />
+    <result column="GOODS_T2" property="goodsT2" jdbcType="VARCHAR" />
+    <result column="GOODS_SIZE" property="goodsSize" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    GOODS_ID, GOODS_NUMBER, GOODS_TYPE_ID, GOODS_NAME, GOODS_PIC, GOODS_INFO, GOODS_CUL, 
+    GOODS_ORIGINAL_PRICE, NORMAL_PRICE, VIP_PRICE, SALE_PRICE, GOODS_RESERVE_COUNT, GOODS_TOTAL_SELL_COUNT, 
+    GOODS_BRAND, GOODS_RESOURCE, GOODS_T1, GOODS_T2, GOODS_SIZE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from JYK.T_GOODS
+    where GOODS_ID = #{goodsId,jdbcType=DECIMAL}
+  </select>
+  <select id="selectAllGoods" resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from JYK.T_GOODS
+    order by GOODS_NUMBER 
+  
+  </select>
+  
+  <sql id="select_sql">
+     select 
+    <include refid="Base_Column_List" />
+     from JYK.T_GOODS
+     where 1=1
+      <if test="goods.goodsName != null and goods.goodsName != ''" >
+        and GOODS_NAME like '%' || #{goods.goodsName} || '%'
+    </if>
+    order by goods_id
+  </sql>
+  <select id="selectCount" resultType="java.lang.Integer">
+    select  count(1) from (<include refid="select_sql"/>)
+  </select>
+  
+  <select id="selectByPager" resultMap="BaseResultMap">
+    select pager2.*,pager2.rn from (
+     select rownum rn,pager1.* from(
+	    <include refid="select_sql"/>
+		    ) pager1
+		
+		)pager2
+		
+		where pager2.rn <![CDATA[>=]]> #{pager.begin}  and pager2.rn <![CDATA[<=]]> #{pager.end}
+  </select>
+  
+ <!--  <select id="selectByPager" resultMap="BaseResultMap" parameterType="com.oracle.util.Pager">
+    select pager2.*,pager2.rn from (
+     select rownum rn,pager1.* from(
+      select  
+	    <include refid="select_sql"/>
+	    from JYK.T_GOODS
+	    order by GOODS_ID
+		    ) pager1
+		
+		)pager2
+		
+		where pager2.rn <![CDATA[>=]]> #{pager.begin}  and pager2.rn <![CDATA[<=]]> #{pager.end}
+  </select> -->
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from JYK.T_GOODS
+    where GOODS_ID = #{goodsId,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.oracle.entity.Goods" >
+    insert into JYK.T_GOODS (GOODS_ID, GOODS_NUMBER, GOODS_TYPE_ID, 
+      GOODS_NAME, GOODS_PIC, GOODS_INFO, 
+      GOODS_CUL, GOODS_ORIGINAL_PRICE, NORMAL_PRICE, 
+      VIP_PRICE, SALE_PRICE, GOODS_RESERVE_COUNT, 
+      GOODS_TOTAL_SELL_COUNT, GOODS_BRAND, GOODS_RESOURCE, 
+      GOODS_T1, GOODS_T2, GOODS_SIZE
+      )
+    values (seq_goods.nextval, #{goodsNumber,jdbcType=DECIMAL}, #{goodsTypeId,jdbcType=DECIMAL}, 
+      #{goodsName,jdbcType=VARCHAR}, #{goodsPic,jdbcType=VARCHAR}, #{goodsInfo,jdbcType=VARCHAR}, 
+      #{goodsCul,jdbcType=DECIMAL}, #{goodsOriginalPrice,jdbcType=DECIMAL}, #{normalPrice,jdbcType=DECIMAL}, 
+      #{vipPrice,jdbcType=DECIMAL}, #{salePrice,jdbcType=DECIMAL}, #{goodsReserveCount,jdbcType=DECIMAL}, 
+      #{goodsTotalSellCount,jdbcType=DECIMAL}, #{goodsBrand,jdbcType=VARCHAR}, #{goodsResource,jdbcType=VARCHAR}, 
+      #{goodsT1,jdbcType=VARCHAR}, #{goodsT2,jdbcType=VARCHAR}, #{goodsSize,jdbcType=DECIMAL}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.oracle.entity.Goods" >
+    insert into JYK.T_GOODS
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="goodsId != null" >
+        GOODS_ID,
+      </if>
+      <if test="goodsNumber != null" >
+        GOODS_NUMBER,
+      </if>
+      <if test="goodsTypeId != null" >
+        GOODS_TYPE_ID,
+      </if>
+      <if test="goodsName != null" >
+        GOODS_NAME,
+      </if>
+      <if test="goodsPic != null" >
+        GOODS_PIC,
+      </if>
+      <if test="goodsInfo != null" >
+        GOODS_INFO,
+      </if>
+      <if test="goodsCul != null" >
+        GOODS_CUL,
+      </if>
+      <if test="goodsOriginalPrice != null" >
+        GOODS_ORIGINAL_PRICE,
+      </if>
+      <if test="normalPrice != null" >
+        NORMAL_PRICE,
+      </if>
+      <if test="vipPrice != null" >
+        VIP_PRICE,
+      </if>
+      <if test="salePrice != null" >
+        SALE_PRICE,
+      </if>
+      <if test="goodsReserveCount != null" >
+        GOODS_RESERVE_COUNT,
+      </if>
+      <if test="goodsTotalSellCount != null" >
+        GOODS_TOTAL_SELL_COUNT,
+      </if>
+      <if test="goodsBrand != null" >
+        GOODS_BRAND,
+      </if>
+      <if test="goodsResource != null" >
+        GOODS_RESOURCE,
+      </if>
+      <if test="goodsT1 != null" >
+        GOODS_T1,
+      </if>
+      <if test="goodsT2 != null" >
+        GOODS_T2,
+      </if>
+      <if test="goodsSize != null" >
+        GOODS_SIZE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="goodsId != null" >
+        #{goodsId,jdbcType=DECIMAL},
+      </if>
+      <if test="goodsNumber != null" >
+        #{goodsNumber,jdbcType=DECIMAL},
+      </if>
+      <if test="goodsTypeId != null" >
+        #{goodsTypeId,jdbcType=DECIMAL},
+      </if>
+      <if test="goodsName != null" >
+        #{goodsName,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsPic != null" >
+        #{goodsPic,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsInfo != null" >
+        #{goodsInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsCul != null" >
+        #{goodsCul,jdbcType=DECIMAL},
+      </if>
+      <if test="goodsOriginalPrice != null" >
+        #{goodsOriginalPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="normalPrice != null" >
+        #{normalPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="vipPrice != null" >
+        #{vipPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="salePrice != null" >
+        #{salePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="goodsReserveCount != null" >
+        #{goodsReserveCount,jdbcType=DECIMAL},
+      </if>
+      <if test="goodsTotalSellCount != null" >
+        #{goodsTotalSellCount,jdbcType=DECIMAL},
+      </if>
+      <if test="goodsBrand != null" >
+        #{goodsBrand,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsResource != null" >
+        #{goodsResource,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsT1 != null" >
+        #{goodsT1,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsT2 != null" >
+        #{goodsT2,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsSize != null" >
+        #{goodsSize,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.oracle.entity.Goods" >
+    update JYK.T_GOODS
+    <set >
+      <if test="goodsNumber != null" >
+        GOODS_NUMBER = #{goodsNumber,jdbcType=DECIMAL},
+      </if>
+      <if test="goodsTypeId != null" >
+        GOODS_TYPE_ID = #{goodsTypeId,jdbcType=DECIMAL},
+      </if>
+      <if test="goodsName != null" >
+        GOODS_NAME = #{goodsName,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsPic != null" >
+        GOODS_PIC = #{goodsPic,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsInfo != null" >
+        GOODS_INFO = #{goodsInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsCul != null" >
+        GOODS_CUL = #{goodsCul,jdbcType=DECIMAL},
+      </if>
+      <if test="goodsOriginalPrice != null" >
+        GOODS_ORIGINAL_PRICE = #{goodsOriginalPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="normalPrice != null" >
+        NORMAL_PRICE = #{normalPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="vipPrice != null" >
+        VIP_PRICE = #{vipPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="salePrice != null" >
+        SALE_PRICE = #{salePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="goodsReserveCount != null" >
+        GOODS_RESERVE_COUNT = #{goodsReserveCount,jdbcType=DECIMAL},
+      </if>
+      <if test="goodsTotalSellCount != null" >
+        GOODS_TOTAL_SELL_COUNT = #{goodsTotalSellCount,jdbcType=DECIMAL},
+      </if>
+      <if test="goodsBrand != null" >
+        GOODS_BRAND = #{goodsBrand,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsResource != null" >
+        GOODS_RESOURCE = #{goodsResource,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsT1 != null" >
+        GOODS_T1 = #{goodsT1,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsT2 != null" >
+        GOODS_T2 = #{goodsT2,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsSize != null" >
+        GOODS_SIZE = #{goodsSize,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where GOODS_ID = #{goodsId,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.oracle.entity.Goods" >
+    update JYK.T_GOODS
+    set GOODS_NUMBER = #{goodsNumber,jdbcType=DECIMAL},
+      GOODS_TYPE_ID = #{goodsTypeId,jdbcType=DECIMAL},
+      GOODS_NAME = #{goodsName,jdbcType=VARCHAR},
+      GOODS_PIC = #{goodsPic,jdbcType=VARCHAR},
+      GOODS_INFO = #{goodsInfo,jdbcType=VARCHAR},
+      GOODS_CUL = #{goodsCul,jdbcType=DECIMAL},
+      GOODS_ORIGINAL_PRICE = #{goodsOriginalPrice,jdbcType=DECIMAL},
+      NORMAL_PRICE = #{normalPrice,jdbcType=DECIMAL},
+      VIP_PRICE = #{vipPrice,jdbcType=DECIMAL},
+      SALE_PRICE = #{salePrice,jdbcType=DECIMAL},
+      GOODS_RESERVE_COUNT = #{goodsReserveCount,jdbcType=DECIMAL},
+      GOODS_TOTAL_SELL_COUNT = #{goodsTotalSellCount,jdbcType=DECIMAL},
+      GOODS_BRAND = #{goodsBrand,jdbcType=VARCHAR},
+      GOODS_RESOURCE = #{goodsResource,jdbcType=VARCHAR},
+      GOODS_T1 = #{goodsT1,jdbcType=VARCHAR},
+      GOODS_T2 = #{goodsT2,jdbcType=VARCHAR},
+      GOODS_SIZE = #{goodsSize,jdbcType=DECIMAL}
+    where GOODS_ID = #{goodsId,jdbcType=DECIMAL}
+  </update>
+</mapper>

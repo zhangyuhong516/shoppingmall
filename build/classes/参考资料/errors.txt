@@ -1,0 +1,20 @@
+public interface Errors {  
+  //=========================全局错误消息（验证/绑定对象全局的）=============================  
+  //注册一个全局的错误码（）  
+  void reject(String errorCode);  
+  //注册一个全局的错误码，当根据errorCode没有找到相应错误消息时，使用defaultMessage作为错误消息  
+  void reject(String errorCode, String defaultMessage);  
+  //注册一个全局的错误码，当根据errorCode没有找到相应错误消息时（带错误参数的），使用defaultMessage作为错误消息  
+   void reject(String errorCode, Object[] errorArgs, String defaultMessage);  
+   //=========================全局错误消息（验证/绑定整个对象的）=============================  
+   //=========================局部错误消息（验证/绑定对象字段的）=============================  
+   //注册一个对象字段的错误码，field指定验证失败的字段名  
+   void rejectValue(String field, String errorCode);  
+   void rejectValue(String field, String errorCode, String defaultMessage);  
+   void rejectValue(String field, String errorCode, Object[] errorArgs, String defaultMessage);  
+   //=========================局部错误消息（验证/绑定对象字段的）=============================  
+      boolean hasErrors();      ////是否有错误  
+      boolean hasGlobalErrors(); //是否有全局错误  
+      boolean hasFieldErrors();  //是否有字段错误  
+      Object getFieldValue(String field); //返回当前验证通过的值，或验证失败时失败的值；  
+   }  

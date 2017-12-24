@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.oracle.model.dao.OrderMapper" >
+  <resultMap id="BaseResultMap" type="com.oracle.entity.Order" >
+    <id column="ORDER_ID" property="orderId" jdbcType="DECIMAL" />
+    <result column="USER_ID" property="userId" jdbcType="DECIMAL" />
+    <result column="GOODS_ID" property="goodsId" jdbcType="DECIMAL" />
+    <result column="ORDER_NUMBER" property="orderNumber" jdbcType="VARCHAR" />
+    <result column="ORDER_TIME" property="orderTime" jdbcType="TIMESTAMP" />
+    <result column="ORDER_COUNT" property="orderCount" jdbcType="DECIMAL" />
+    <result column="ORDER_MODE" property="orderMode" jdbcType="DECIMAL" />
+    <result column="ORDER_TOTALPRICE" property="orderTotalprice" jdbcType="DECIMAL" />
+    <result column="user_realname" property="user.userRealname" jdbcType="VARCHAR" />
+    <result column="user_address" property="user.userAddress" jdbcType="VARCHAR" />
+    <result column="user_tel" property="user.userTel" jdbcType="VARCHAR" />
+    <result column="goods_name" property="goods.goodsName" jdbcType="VARCHAR" />
+    <result column="goods_cul" property="goods.goodsCul" jdbcType="DECIMAL" />
+    <result column="goods_size" property="goods.goodsSize" jdbcType="DECIMAL" />
+    <result column="normal_price" property="goods.normalPrice" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ORDER_ID, USER_ID, GOODS_ID, ORDER_NUMBER, ORDER_TIME, ORDER_COUNT, ORDER_MODE, ORDER_TOTALPRICE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from JYK.T_ORDER
+    where ORDER_ID = #{orderId,jdbcType=DECIMAL}
+  </select>
+  
+  <select id="selectByUser" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    select o.*,u.user_realname,u.user_address,u.user_tel,g.goods_name,g.goods_size,g.goods_cul,g.normal_price
+    
+    from jyk.t_order o
+    
+    inner join jyk.t_user u on u.user_id = o.user_id
+    
+    inner join jyk.t_goods g on g.goods_id = o.goods_id
+    
+    where o.order_id = #{orderId,jdbcType=DECIMAL}
+  </select>
+  
+  <select id="selectAll" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from JYK.T_ORDER
+    order by ORDER_ID
+  </select>
+  
+  <sql id="select_sql">
+     select 
+    <include refid="Base_Column_List" />
+     from JYK.T_ORDER
+     where 1=1
+      <if test="order.orderNumber != null and order.orderNumber != ''" >
+        and ORDER_NUMBER like '%' || #{order.orderNumber} || '%'
+    </if>
+    
+    <if test="order.orderMode != null" >
+        and ORDER_MODE = #{order.orderMode}
+    </if>
+    
+    order by order_id
+  </sql>
+  
+  <select id="selectCount" resultType="java.lang.Integer">
+    select  count(1) from (<include refid="select_sql"/>)
+  </select>
+  
+  <select id="selectByPager" resultMap="BaseResultMap">
+    select pager2.*,pager2.rn from (
+     select rownum rn,pager1.* from(
+     <!-- select 
+	    <include refid="Base_Column_List" />
+	    from JYK.T_ORDER
+	    order by ORDER_ID -->
+	    <include refid="select_sql"/>
+		    ) pager1
+		
+		)pager2
+		
+		where pager2.rn <![CDATA[>=]]> #{pager.begin}  and pager2.rn <![CDATA[<=]]> #{pager.end}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from JYK.T_ORDER
+    where ORDER_ID = #{orderId,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.oracle.entity.Order" >
+    insert into JYK.T_ORDER (ORDER_ID, USER_ID, GOODS_ID, ORDER_NUMBER, ORDER_TIME, ORDER_COUNT, ORDER_MODE, ORDER_TOTALPRICE)
+    values (#{orderId,jdbcType=DECIMAL}, #{userId,jdbcType=DECIMAL}, #{goodsId,jdbcType=DECIMAL}, #{orderNumber,jdbcType=VARCHAR}, 
+    #{orderTime,jdbcType=TIMESTAMP}, #{orderCount,jdbcType=DECIMAL}, #{orderMode,jdbcType=DECIMAL}, #{orderTotalprice,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.oracle.entity.Order" >
+    insert into JYK.T_ORDER
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="orderId != null" >
+        ORDER_ID,
+      </if>
+      <if test="userId != null" >
+        USER_ID,
+      </if>
+      <if test="goodsId != null" >
+        GOODS_ID,
+      </if>
+      <if test="orderNumber != null" >
+        ORDER_NUMBER,
+      </if>
+      <if test="orderTime != null" >
+        ORDER_TIME,
+      </if>
+      <if test="orderCount != null" >
+        ORDER_COUNT,
+      </if>
+      <if test="orderMode != null" >
+        ORDER_MODE,
+      </if>
+      <if test="orderTotalprice != null" >
+        ORDER_TOTALPRICE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="orderId != null" >
+        #{orderId,jdbcType=DECIMAL},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=DECIMAL},
+      </if>
+      <if test="goodsId != null" >
+        #{goodsId,jdbcType=DECIMAL},
+      </if>
+      <if test="orderNumber != null" >
+        #{orderNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="orderTime != null" >
+        #{orderTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orderCount != null" >
+        #{orderCount,jdbcType=DECIMAL},
+      </if>
+      <if test="orderMode != null" >
+        #{orderMode,jdbcType=DECIMAL},
+      </if>
+      <if test="orderTotalprice != null" >
+        #{orderTotalprice,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  
+  
+  <insert id="insertShopcarList2Order" >
+  begin
+  <foreach collection="param2" item="goodsId">
+    insert into JYK.T_ORDER (ORDER_ID, USER_ID, GOODS_ID)
+    values (SEQ_ORDER.nextval, #{param1,jdbcType=DECIMAL}, #{goodsId,jdbcType=DECIMAL});
+    </foreach>
+   end; 
+  </insert>
+  
+  
+  
+  <update id="updateByPrimaryKeySelective" parameterType="com.oracle.entity.Order" >
+    update JYK.T_ORDER
+    <set >
+      <if test="userId != null" >
+        USER_ID = #{userId,jdbcType=DECIMAL},
+      </if>
+      <if test="goodsId != null" >
+        GOODS_ID = #{goodsId,jdbcType=DECIMAL},
+      </if>
+      <if test="orderNumber != null" >
+        ORDER_NUMBER = #{orderNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="orderTime != null" >
+        ORDER_TIME = #{orderTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orderCount != null" >
+        ORDER_COUNT = #{orderCount,jdbcType=DECIMAL},
+      </if>
+      <if test="orderMode != null" >
+        ORDER_MODE = #{orderMode,jdbcType=DECIMAL},
+      </if>
+      <if test="orderTotalprice != null" >
+        ORDER_TOTALPRICE = #{orderTotalprice,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where ORDER_ID = #{orderId,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.oracle.entity.Order" >
+    update JYK.T_ORDER
+    set USER_ID = #{userId,jdbcType=DECIMAL},
+      GOODS_ID = #{goodsId,jdbcType=DECIMAL},    
+      ORDER_NUMBER = #{orderNumber,jdbcType=VARCHAR},
+      ORDER_TIME = #{orderTime,jdbcType=TIMESTAMP},
+      ORDER_COUNT = #{orderCount,jdbcType=DECIMAL},
+      ORDER_MODE = #{orderMode,jdbcType=DECIMAL},
+      ORDER_TOTALPRICE = #{orderTotalprice,jdbcType=DECIMAL}
+    where ORDER_ID = #{orderId,jdbcType=DECIMAL}
+  </update>
+</mapper>

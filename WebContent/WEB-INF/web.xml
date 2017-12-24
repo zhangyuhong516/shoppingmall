@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.0" 
+	xmlns="http://java.sun.com/xml/ns/javaee" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+	http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd
+	http://java.springframework.org/schema/tx
+	http://java.springframework.org/schema/tx/spring-tx.xsd">
+	
+  <display-name>shoppingmall</display-name>	
+  
+  <welcome-file-list>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+  
+  <mime-mapping>
+   <extension>svg</extension>
+   <mime-type>image/svg+xml</mime-type>
+   </mime-mapping> 
+   
+   <mime-mapping>
+   <extension>woff</extension>
+   <mime-type>application/x-font-woff</mime-type>
+   </mime-mapping> 
+   
+   <mime-mapping>
+   <extension>woff2</extension>
+   <mime-type>application/x-font-woff</mime-type>
+   </mime-mapping> 
+   
+   <mime-mapping>
+   <extension>ttf</extension>
+   <mime-type>application/octet-stream</mime-type>
+   </mime-mapping> 
+   
+   <mime-mapping>
+   <extension>otf</extension>
+   <mime-type>application/octet-stream</mime-type>
+   </mime-mapping>
+   
+  
+    <!-- 使用DefaultServlet处理以下请求 -->
+  <servlet-mapping>
+    <servlet-name>default</servlet-name>
+    <url-pattern>/images/*</url-pattern>
+    <url-pattern>*.js</url-pattern>
+    <url-pattern>*.css</url-pattern>
+    <url-pattern>*.woff</url-pattern>
+    <url-pattern>*.woff2</url-pattern>
+    <url-pattern>*.ttf</url-pattern>
+  </servlet-mapping>
+  
+  <!-- application监听器，在应用创建时启动spring -->
+  <listener>
+     <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+
+	<context-param>
+	<param-name>contextConfigLocation</param-name>
+	<param-value>classpath:applicationContext.xml,classpath:spring-aop.xml</param-value>
+	</context-param>
+
+  <listener>
+     <listener-class>com.oracle.listener.ApplicationListener</listener-class>
+  </listener>
+
+	<!-- 使用springMvc DispatcherServlet处理以下请求 -->
+  <servlet>
+    <servlet-name>springMvc</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <init-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>classpath:spring-mvc.xml</param-value>
+    </init-param>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>springMvc</servlet-name>
+    <url-pattern>/</url-pattern><!--不解析jsp，其它都解析 /*和/的区别  /* 任何请求都符合条件, / 除了*.jsp之其它任意请求都符合条件-->
+  </servlet-mapping>
+
+   <filter>
+      <description>字符集过滤器</description>
+      <filter-name>charactorEncodingFilter</filter-name>
+      <filter-class>com.oracle.filter.CharactorEncodingFilter</filter-class>
+   </filter>	
+   
+   <filter-mapping>
+      <filter-name>charactorEncodingFilter</filter-name>
+      <servlet-name>springMvc</servlet-name>
+     <!--  <url-pattern>/*</url-pattern> -->
+   </filter-mapping>
+	
+
+   
+</web-app>

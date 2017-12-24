@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.oracle.model.dao.AdminRoleMapper" >
+  <resultMap id="BaseResultMap" type="com.oracle.entity.AdminRole" >
+    <id column="ADMIN_ROLE_ID" property="adminRoleId" jdbcType="DECIMAL" />
+    <result column="ROLE_ID" property="roleId" jdbcType="DECIMAL" />
+    <result column="ADMIN_ID" property="adminId" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ADMIN_ROLE_ID, ROLE_ID, ADMIN_ID
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from JYK.T_ADMIN_ROLE
+    where ADMIN_ROLE_ID = #{adminRoleId,jdbcType=DECIMAL}
+  </select>
+  
+   <select id="selectAdminRoleById" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from JYK.T_ADMIN_ROLE
+    where ADMIN_ID = #{adminId,jdbcType=DECIMAL}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from JYK.T_ADMIN_ROLE
+    where ADMIN_ROLE_ID = #{adminRoleId,jdbcType=DECIMAL}
+  </delete>
+  
+  <delete id="deleteByAdminId" parameterType="java.lang.Integer" >
+    delete from JYK.T_ADMIN_ROLE
+    where ADMIN_ID = #{adminId,jdbcType=DECIMAL}
+  </delete>
+  
+  <insert id="insert" parameterType="com.oracle.entity.AdminRole" >
+    insert into JYK.T_ADMIN_ROLE (ADMIN_ROLE_ID, ROLE_ID, ADMIN_ID
+      )
+    values (#{adminRoleId,jdbcType=DECIMAL}, #{roleId,jdbcType=DECIMAL}, #{adminId,jdbcType=DECIMAL}
+      )
+  </insert>
+  
+  <insert id="insertBatch" >
+  begin
+  <foreach collection="param2" item="roleId">
+    insert into JYK.T_ADMIN_ROLE (ADMIN_ROLE_ID, ROLE_ID, ADMIN_ID)
+    values (SEQ_ADMIN_ROLE.nextval, #{roleId,jdbcType=DECIMAL}, #{param1,jdbcType=DECIMAL});
+    </foreach>
+    end;
+  </insert>
+  
+  <insert id="insertSelective" parameterType="com.oracle.entity.AdminRole" >
+    insert into JYK.T_ADMIN_ROLE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="adminRoleId != null" >
+        ADMIN_ROLE_ID,
+      </if>
+      <if test="roleId != null" >
+        ROLE_ID,
+      </if>
+      <if test="adminId != null" >
+        ADMIN_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="adminRoleId != null" >
+        #{adminRoleId,jdbcType=DECIMAL},
+      </if>
+      <if test="roleId != null" >
+        #{roleId,jdbcType=DECIMAL},
+      </if>
+      <if test="adminId != null" >
+        #{adminId,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.oracle.entity.AdminRole" >
+    update JYK.T_ADMIN_ROLE
+    <set >
+      <if test="roleId != null" >
+        ROLE_ID = #{roleId,jdbcType=DECIMAL},
+      </if>
+      <if test="adminId != null" >
+        ADMIN_ID = #{adminId,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where ADMIN_ROLE_ID = #{adminRoleId,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.oracle.entity.AdminRole" >
+    update JYK.T_ADMIN_ROLE
+    set ROLE_ID = #{roleId,jdbcType=DECIMAL},
+      ADMIN_ID = #{adminId,jdbcType=DECIMAL}
+    where ADMIN_ROLE_ID = #{adminRoleId,jdbcType=DECIMAL}
+  </update>
+</mapper>

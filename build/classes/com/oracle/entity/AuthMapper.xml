@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.oracle.model.dao.AuthMapper" >
+  <resultMap id="BaseResultMap" type="com.oracle.entity.Auth" >
+    <id column="AUTH_ID" property="authId" jdbcType="DECIMAL" />
+    <result column="AUTH_NAME" property="authName" jdbcType="VARCHAR" />
+    <result column="AUTH_CODE" property="authCode" jdbcType="DECIMAL" />
+    <result column="AUTH_URL" property="authUrl" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    AUTH_ID, AUTH_NAME, AUTH_CODE, AUTH_URL
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from JYK.T_AUTH
+    where AUTH_ID = #{authId,jdbcType=DECIMAL}
+  </select>
+  
+  <select id="selectAllAuth" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from JYK.T_AUTH
+    order by AUTH_CODE
+  </select>
+  
+  <select id="selectCount" resultType="java.lang.Integer">
+    select  count(1) from JYK.T_AUTH order by AUTH_CODE
+  </select>
+  
+  <select id="selectByPager" resultMap="BaseResultMap">
+    select pager2.*,pager2.rn from (
+     select rownum rn,pager1.* from(
+      select  
+	    <include refid="Base_Column_List" />
+	    from JYK.T_AUTH
+	    order by AUTH_CODE
+		    ) pager1
+		
+		)pager2
+		
+		where pager2.rn <![CDATA[>=]]> #{pager.begin}  and pager2.rn <![CDATA[<=]]> #{pager.end}
+  </select>
+  
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from JYK.T_AUTH
+    where AUTH_ID = #{authId,jdbcType=DECIMAL}
+  </delete>
+  
+  <insert id="insert" parameterType="com.oracle.entity.Auth" >
+    insert into JYK.T_AUTH (AUTH_ID, AUTH_NAME, AUTH_CODE, 
+      AUTH_URL)
+    values (seq_auth.nextval, #{authName,jdbcType=VARCHAR}, #{authCode,jdbcType=VARCHAR}, 
+      #{authUrl,jdbcType=VARCHAR})
+  </insert>
+  
+  <insert id="insertSelective" parameterType="com.oracle.entity.Auth" >
+    insert into JYK.T_AUTH
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+        AUTH_ID,
+      <if test="authName != null" >
+        AUTH_NAME,
+      </if>
+      <if test="authCode != null" >
+        AUTH_CODE,
+      </if>
+      <if test="authUrl != null" >
+        AUTH_URL,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="authId != null" >
+        seq_auth.nextval,
+      </if>
+      <if test="authName != null" >
+        #{authName,jdbcType=VARCHAR},
+      </if>
+      <if test="authCode != null" >
+        #{authCode,jdbcType=VARCHAR},
+      </if>
+      <if test="authUrl != null" >
+        #{authUrl,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.oracle.entity.Auth" >
+    update JYK.T_AUTH
+    <set >
+      <if test="authName != null" >
+        AUTH_NAME = #{authName,jdbcType=VARCHAR},
+      </if>
+      <if test="authCode != null" >
+        AUTH_CODE = #{authCode,jdbcType=VARCHAR},
+      </if>
+      <if test="authUrl != null" >
+        AUTH_URL = #{authUrl,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where AUTH_ID = #{authId,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.oracle.entity.Auth" >
+    update JYK.T_AUTH
+    set AUTH_NAME = #{authName,jdbcType=VARCHAR},
+      AUTH_CODE = #{authCode,jdbcType=VARCHAR},
+      AUTH_URL = #{authUrl,jdbcType=VARCHAR}
+    where AUTH_ID = #{authId,jdbcType=DECIMAL}
+  </update>
+</mapper>

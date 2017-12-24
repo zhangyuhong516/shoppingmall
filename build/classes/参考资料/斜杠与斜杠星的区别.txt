@@ -1,0 +1,4 @@
+url-pattern配置成/*的时候，Tomcat会将所有的请求交给对应的Servlet进行处理
+当url-pattern配置成/的时候，多数情况下与/*效果一致
+
+但是，当访问的路径正好对应jsp文件时，Tomcat会访问真实的jsp文件而不是把请求交给对应的Servlet处理

@@ -1,0 +1,37 @@
+HandlerInterceptor 
+
+<!-- À¹½ØÆ÷ÅäÖÃ -->
+	 <mvc:interceptors>
+	    <!-- ¶à¸öÀ¹½ØÆ÷½«Ë³ÐòÖ´ÐÐ -->
+	    <mvc:interceptor>
+	      <mvc:mapping path="/**"/> <!-- À¹½ØÂ·¾¶ -->
+	      <bean class="com.oracle.filter.CharaterIntercepror"></bean>
+	    </mvc:interceptor>
+	    
+	    <mvc:interceptor>
+	      <mvc:mapping path="/**"/> <!-- À¹½ØÂ·¾¶ -->
+	      <!-- <mvc:exclude-mapping path="/login"/>²»À¹½ØµÄÂ·¾¶
+	      <mvc:exclude-mapping path="/logout"/>²»À¹½ØµÄÂ·¾¶ -->
+	      <bean class="com.oracle.filter.LoginInterceptor">
+		       <property name="uncheckUrls">
+		         <list>
+		          <value>/login</value>
+		          <value>/logout</value>
+		         </list>
+		       </property>
+	      </bean>
+	    </mvc:interceptor>
+	    
+	    <mvc:interceptor>
+	      <mvc:mapping path="/**"/> <!-- À¹½ØÂ·¾¶ -->
+	      <bean class="com.oracle.filter.AuthInterceptor">
+		       <property name="uncheckUrls">
+		         <list>
+		          <value>/login</value>
+		          <value>/logout</value>
+		         </list>
+		       </property>
+	      </bean>
+	    </mvc:interceptor>
+	    
+	 </mvc:interceptors> 

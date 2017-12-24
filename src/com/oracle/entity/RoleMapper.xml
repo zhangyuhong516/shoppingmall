@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.oracle.model.dao.RoleMapper" >
+  <resultMap id="BaseResultMap" type="com.oracle.entity.Role" >
+    <id column="ROLE_ID" property="roleId" jdbcType="DECIMAL" />
+    <result column="ROLE_NAME" property="roleName" jdbcType="VARCHAR" />
+    <result column="ROLE_CODE" property="roleCode" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ROLE_ID, ROLE_NAME, ROLE_CODE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from JYK.T_ROLE
+    where ROLE_ID = #{roleId,jdbcType=DECIMAL}
+  </select>
+  
+  <select id="selectAllRole" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from JYK.T_ROLE
+    order by ROLE_CODE
+  </select>
+  
+  
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from JYK.T_ROLE
+    where ROLE_ID = #{roleId,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.oracle.entity.Role" >
+    insert into JYK.T_ROLE (ROLE_ID, ROLE_NAME, ROLE_CODE
+      )
+    values (seq_role.nextval, #{roleName,jdbcType=VARCHAR}, #{roleCode,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.oracle.entity.Role" >
+    insert into JYK.T_ROLE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+        ROLE_ID,
+      <if test="roleName != null" >
+        ROLE_NAME,
+      </if>
+      <if test="roleCode != null" >
+        ROLE_CODE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+        seq_role.nextval,
+      <if test="roleName != null" >
+        #{roleName,jdbcType=VARCHAR},
+      </if>
+      <if test="roleCode != null" >
+        #{roleCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.oracle.entity.Role" >
+    update JYK.T_ROLE
+    <set >
+      <if test="roleName != null" >
+        ROLE_NAME = #{roleName,jdbcType=VARCHAR},
+      </if>
+      <if test="roleCode != null" >
+        ROLE_CODE = #{roleCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ROLE_ID = #{roleId,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.oracle.entity.Role" >
+    update JYK.T_ROLE
+    set ROLE_NAME = #{roleName,jdbcType=VARCHAR},
+      ROLE_CODE = #{roleCode,jdbcType=VARCHAR}
+    where ROLE_ID = #{roleId,jdbcType=DECIMAL}
+  </update>
+</mapper>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.oracle.model.dao.SuggestMapper" >
+  <resultMap id="BaseResultMap" type="com.oracle.entity.Suggest" >
+    <id column="SUGGEST_ID" property="suggestId" jdbcType="DECIMAL" />
+    <result column="USER_ID" property="userId" jdbcType="DECIMAL" />
+    <result column="SUGGEST_CONTENT" property="suggestContent" jdbcType="VARCHAR" />
+    <result column="SUGGEST_DATE" property="suggestDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    SUGGEST_ID, USER_ID, SUGGEST_CONTENT, SUGGEST_DATE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from JYK.T_SUGGEST
+    where SUGGEST_ID = #{suggestId,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from JYK.T_SUGGEST
+    where SUGGEST_ID = #{suggestId,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.oracle.entity.Suggest" >
+    insert into JYK.T_SUGGEST (SUGGEST_ID, USER_ID, SUGGEST_CONTENT, 
+      SUGGEST_DATE)
+    values (#{suggestId,jdbcType=DECIMAL}, #{userId,jdbcType=DECIMAL}, #{suggestContent,jdbcType=VARCHAR}, 
+      #{suggestDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.oracle.entity.Suggest" >
+    insert into JYK.T_SUGGEST
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="suggestId != null" >
+        SUGGEST_ID,
+      </if>
+      <if test="userId != null" >
+        USER_ID,
+      </if>
+      <if test="suggestContent != null" >
+        SUGGEST_CONTENT,
+      </if>
+      <if test="suggestDate != null" >
+        SUGGEST_DATE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="suggestId != null" >
+        #{suggestId,jdbcType=DECIMAL},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=DECIMAL},
+      </if>
+      <if test="suggestContent != null" >
+        #{suggestContent,jdbcType=VARCHAR},
+      </if>
+      <if test="suggestDate != null" >
+        #{suggestDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.oracle.entity.Suggest" >
+    update JYK.T_SUGGEST
+    <set >
+      <if test="userId != null" >
+        USER_ID = #{userId,jdbcType=DECIMAL},
+      </if>
+      <if test="suggestContent != null" >
+        SUGGEST_CONTENT = #{suggestContent,jdbcType=VARCHAR},
+      </if>
+      <if test="suggestDate != null" >
+        SUGGEST_DATE = #{suggestDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where SUGGEST_ID = #{suggestId,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.oracle.entity.Suggest" >
+    update JYK.T_SUGGEST
+    set USER_ID = #{userId,jdbcType=DECIMAL},
+      SUGGEST_CONTENT = #{suggestContent,jdbcType=VARCHAR},
+      SUGGEST_DATE = #{suggestDate,jdbcType=TIMESTAMP}
+    where SUGGEST_ID = #{suggestId,jdbcType=DECIMAL}
+  </update>
+</mapper>

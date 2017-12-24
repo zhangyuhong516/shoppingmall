@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oracle.model.dao.GoodsTypeMapper">
+  <resultMap id="BaseResultMap" type="com.oracle.entity.GoodsType">
+    <id column="GOODS_TYPE_ID" jdbcType="DECIMAL" property="goodsTypeId" />
+    <result column="GOODS_TYPE_NAME" jdbcType="VARCHAR" property="goodsTypeName" />
+    <result column="GOODS_TYPE_PID" jdbcType="VARCHAR" property="goodsTypePid" />
+    <result column="GOODS_TYPE_T1" jdbcType="VARCHAR" property="goodsTypeT1" />
+    <result column="GOODS_TYPE_LV" jdbcType="DECIMAL" property="goodsTypeLv" />
+    <result column="GOODS_TYPE_RANK" jdbcType="DECIMAL" property="goodsTypeRank" />
+  </resultMap>
+  
+  <resultMap id="MyMap" extends="BaseResultMap" type="com.oracle.entity.GoodsType" >
+  	<result column="Childcount" jdbcType="DECIMAL" property="childcount" />
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    GOODS_TYPE_ID, GOODS_TYPE_NAME, GOODS_TYPE_PID, GOODS_TYPE_T1, GOODS_TYPE_LV, GOODS_TYPE_RANK
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from JYK.T_GOODS_TYPE
+    where GOODS_TYPE_ID = #{goodsTypeId,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from JYK.T_GOODS_TYPE
+    where GOODS_TYPE_ID = #{goodsTypeId,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.oracle.entity.GoodsType">
+    insert into JYK.T_GOODS_TYPE (GOODS_TYPE_ID, GOODS_TYPE_NAME, GOODS_TYPE_PID, 
+      GOODS_TYPE_T1, GOODS_TYPE_LV, GOODS_TYPE_RANK
+      )
+    values (#{goodsTypeId,jdbcType=DECIMAL}, #{goodsTypeName,jdbcType=VARCHAR}, #{goodsTypePid,jdbcType=VARCHAR}, 
+      #{goodsTypeT1,jdbcType=VARCHAR}, #{goodsTypeLv,jdbcType=DECIMAL}, #{goodsTypeRank,jdbcType=DECIMAL}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.oracle.entity.GoodsType">
+    insert into JYK.T_GOODS_TYPE
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="goodsTypeId != null">
+        GOODS_TYPE_ID,
+      </if>
+      <if test="goodsTypeName != null">
+        GOODS_TYPE_NAME,
+      </if>
+      <if test="goodsTypePid != null">
+        GOODS_TYPE_PID,
+      </if>
+      <if test="goodsTypeT1 != null">
+        GOODS_TYPE_T1,
+      </if>
+      <if test="goodsTypeLv != null">
+        GOODS_TYPE_LV,
+      </if>
+      <if test="goodsTypeRank != null">
+        GOODS_TYPE_RANK,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="goodsTypeId != null">
+        #{goodsTypeId,jdbcType=DECIMAL},
+      </if>
+      <if test="goodsTypeName != null">
+        #{goodsTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsTypePid != null">
+        #{goodsTypePid,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsTypeT1 != null">
+        #{goodsTypeT1,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsTypeLv != null">
+        #{goodsTypeLv,jdbcType=DECIMAL},
+      </if>
+      <if test="goodsTypeRank != null">
+        #{goodsTypeRank,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.oracle.entity.GoodsType">
+    update JYK.T_GOODS_TYPE
+    <set>
+      <if test="goodsTypeName != null">
+        GOODS_TYPE_NAME = #{goodsTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsTypePid != null">
+        GOODS_TYPE_PID = #{goodsTypePid,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsTypeT1 != null">
+        GOODS_TYPE_T1 = #{goodsTypeT1,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsTypeLv != null">
+        GOODS_TYPE_LV = #{goodsTypeLv,jdbcType=DECIMAL},
+      </if>
+      <if test="goodsTypeRank != null">
+        GOODS_TYPE_RANK = #{goodsTypeRank,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where GOODS_TYPE_ID = #{goodsTypeId,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.oracle.entity.GoodsType">
+    update JYK.T_GOODS_TYPE
+    set GOODS_TYPE_NAME = #{goodsTypeName,jdbcType=VARCHAR},
+      GOODS_TYPE_PID = #{goodsTypePid,jdbcType=VARCHAR},
+      GOODS_TYPE_T1 = #{goodsTypeT1,jdbcType=VARCHAR},
+      GOODS_TYPE_LV = #{goodsTypeLv,jdbcType=DECIMAL},
+      GOODS_TYPE_RANK = #{goodsTypeRank,jdbcType=DECIMAL}
+    where GOODS_TYPE_ID = #{goodsTypeId,jdbcType=DECIMAL}
+  </update>
+  
+  <!-- 新增查询语句 -->
+  <!-- 通过分类名称查询分类信息 -->
+  <select id="selectByname" resultMap="BaseResultMap">
+  	select
+  	<include refid="Base_Column_List" />
+  	from JYK.T_GOODS_TYPE
+  	where GOODS_TYPE_NAME =#{goodsTypeName,jdbcType=VARCHAR}
+  </select>
+  
+  
+  <!-- 通过级别查询查询这一级别所有标签 -->
+  <select id="selectFirstType" resultMap="MyMap">
+    select 
+       <include refid="Base_Column_List" />
+       ,(
+         select count(1) 
+         from JYK.T_GOODS_TYPE 
+         where GOODS_TYPE_PID like '%' || t1.goods_type_id ||'%'
+        ) as Childcount
+      
+   from JYK.T_GOODS_TYPE t1    
+   where GOODS_TYPE_LV =0 order by t1.goods_type_id
+  </select>
+  
+  <select id="selectSecondType" resultMap="BaseResultMap">
+  	select 
+       <include refid="Base_Column_List" />
+       ,(
+         select count(1) 
+         from JYK.T_GOODS_TYPE 
+         where GOODS_TYPE_PID like '%' || t1.goods_type_id ||'%'
+        ) as Childcount
+      
+   from JYK.T_GOODS_TYPE t1    
+   where GOODS_TYPE_LV =1 order by t1.goods_type_id
+  </select>
+  
+  <select id="selectThirdType" resultMap="BaseResultMap">
+  	select 
+       <include refid="Base_Column_List" />
+       ,(
+         select count(1) 
+         from JYK.T_GOODS_TYPE 
+         where GOODS_TYPE_PID like '%' || t1.goods_type_id ||'%'
+        ) as Childcount
+      
+   from JYK.T_GOODS_TYPE t1    
+   where GOODS_TYPE_LV =2 order by t1.goods_type_id
+  </select>
+  
+
+  
+ <!-- ./新增查询语句 -->
+
+</mapper>
